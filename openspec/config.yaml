@@ -1,0 +1,66 @@
+# openspec/config.yaml — SDD configuration for workout-timer
+schema: spec-driven
+
+context: |
+  Project: workout-timer
+  Platform: Expo (React Native) — iOS, Android, Web
+  Language: TypeScript 6.x (strict mode)
+  Framework: React 19 + React Native 0.86 + Expo SDK 57
+  Entry: index.ts → App.tsx
+  Test runner: none (no jest-expo or testing-library installed)
+  Strict TDD: false (no test runner detected)
+
+testing:
+  strict_tdd: false
+  runner: none
+  layers:
+    unit: false
+    integration: false
+    e2e: false
+  coverage:
+    available: false
+    command: ""
+  quality:
+    linter: false
+    type_checker: true
+    type_check_command: "tsc --noEmit"
+    formatter: false
+
+archive:
+  changes:
+    - name: workout-timer-v1
+      archived: 2026-07-02
+      path: openspec/changes/archive/2026-07-02-workout-timer-v1/
+      status: complete
+      notes: >
+        All 7 tasks implemented. 3 critical verification findings resolved (audio
+        lazy-require, notification custom sounds, stale Home list). Type-checking
+        passes. Audio assets require manual addition before foreground/background
+        audio is operational.
+
+rules:
+  proposal:
+    - Include rollback plan for risky changes
+    - Identify cross-platform (iOS/Android/Web) impact
+  specs:
+    - Use Given/When/Then for scenarios
+    - Use RFC 2119 keywords (MUST, SHALL, SHOULD, MAY)
+    - Note platform-specific behavior differences when relevant
+  design:
+    - Include component hierarchy diagrams for UI changes
+    - Document architecture decisions with rationale
+    - Consider Expo SDK constraints and native module availability
+  tasks:
+    - Group by phase, use hierarchical numbering
+    - Keep tasks completable in one session
+    - Tag tasks that require device/simulator testing
+  apply:
+    - Follow existing React Native + Expo patterns
+    tdd: false
+    test_command: ""
+  verify:
+    test_command: "tsc --noEmit"
+    build_command: "expo export"
+    coverage_threshold: 0
+  archive:
+    - Warn before merging destructive deltas
