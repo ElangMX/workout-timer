@@ -124,6 +124,9 @@ export function timerReducer(state: TimerState, action: TimerAction): TimerState
   switch (action.type) {
     case 'START': {
       const routine: Routine = action.routine;
+      // Guard: an empty routine cannot be executed — return current state as a no-op.
+      // The UI should already prevent this path, but we protect the reducer too.
+      if (routine.exercises.length === 0) return state;
       return {
         routine,
         currentSetIndex: 0,

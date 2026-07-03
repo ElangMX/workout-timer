@@ -39,9 +39,9 @@ export async function schedulePhase(remainingSeconds: number): Promise<void> {
     if (remainingSeconds > WARNING_AT_SECONDS) {
       const warningId = await Notifications.scheduleNotificationAsync({
         content: {
-          title: 'Workout Timer',
-          body: `${WARNING_AT_SECONDS} seconds remaining!`,
-          sound: true,
+          title: 'Get Ready!',
+          body: '5 seconds remaining',
+          sound: 'alert-warning.mp3',
         },
         trigger: {
           type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
@@ -54,9 +54,9 @@ export async function schedulePhase(remainingSeconds: number): Promise<void> {
     // Phase-end notification
     const endId = await Notifications.scheduleNotificationAsync({
       content: {
-        title: 'Workout Timer',
-        body: 'Phase complete!',
-        sound: true,
+        title: 'Phase Complete!',
+        body: 'Transitioning to next phase',
+        sound: 'alert-end.mp3',
       },
       trigger: {
         type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,

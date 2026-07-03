@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   SafeAreaView,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useRoutines } from '../hooks/useRoutines';
 import { RoutineListItem } from '../components/RoutineListItem';
@@ -18,7 +19,15 @@ import type { RootStackParamList, Routine } from '../types';
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 export function HomeScreen({ navigation }: Props) {
-  const { routines, loading, deleteRoutine } = useRoutines();
+  const { routines, loading, loadRoutines, deleteRoutine } = useRoutines();
+
+  // Reload routines from AsyncStorage every time this screen comes into focus.
+  // This guarantees the list is fresh after returning from RoutineSetupScreen.
+  useFocusEffect(
+    useCallback(() => {
+      loadRoutines().catch(() => {});
+    }, [loadRoutines]),
+  );
 
   const handleStartRoutine = useCallback(
     (routine: Routine) => {

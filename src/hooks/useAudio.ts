@@ -6,12 +6,17 @@
  * both players on unmount.
  *
  * Audio asset files must exist at assets/sounds/alert-warning.mp3 and
- * assets/sounds/alert-end.mp3. If an asset is missing the play calls
- * are no-ops (graceful degradation).
+ * assets/sounds/alert-end.mp3. If an asset is missing, the play calls
+ * fall back to expo-haptics vibration so the user still gets physical
+ * feedback even without the sound files.
+ *
+ * NOTE: require() calls are wrapped in try/catch at the call site (not at
+ * module level) so Metro does not fail the bundle when the files are absent.
  */
 
 import { useEffect, useRef } from 'react';
 import { createAudioPlayer, setAudioModeAsync } from 'expo-audio';
+import * as Haptics from 'expo-haptics';
 import type { AudioPlayer } from 'expo-audio';
 
 export interface AudioController {
@@ -19,14 +24,35 @@ export interface AudioController {
   playEnd(): void;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const WARNING_ASSET = require('../../assets/sounds/alert-warning.mp3') as number | null;
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const END_ASSET = require('../../assets/sounds/alert-end.mp3') as number | null;
+/**
+ * Safely require an audio asset. Returns the asset module number if found,
+ * or null if Metro cannot resolve the file (missing asset).
+ * Wrapping the require() inside a function body prevents Metro from
+ * hard-failing the bundle on a missing static require target at module load.
+ */
+function tryRequireWarning(): number | null {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    return require('../../assets/sounds/alert-warning.mp3') as number;
+  } catch {
+    return null;
+  }
+}
+
+function tryRequireEnd(): number | null {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    return require('../../assets/sounds/alert-end.mp3') as number;
+  } catch {
+    return null;
+  }
+}
 
 export function useAudio(): AudioController {
   const warningPlayerRef = useRef<AudioPlayer | null>(null);
   const endPlayerRef = useRef<AudioPlayer | null>(null);
+  const warningAvailableRef = useRef<boolean>(false);
+  const endAvailableRef = useRef<boolean>(false);
 
   useEffect(() => {
     // Configure iOS session: play even when the physical silent switch is on
@@ -35,20 +61,24 @@ export function useAudio(): AudioController {
     });
 
     // Preload players for low-latency playback
-    try {
-      if (WARNING_ASSET != null) {
-        warningPlayerRef.current = createAudioPlayer(WARNING_ASSET);
+    const warningAsset = tryRequireWarning();
+    if (warningAsset != null) {
+      try {
+        warningPlayerRef.current = createAudioPlayer(warningAsset);
+        warningAvailableRef.current = true;
+      } catch {
+        // Asset exists but player creation failed — haptics fallback will be used
       }
-    } catch {
-      // Asset missing or platform error — play calls will be no-ops
     }
 
-    try {
-      if (END_ASSET != null) {
-        endPlayerRef.current = createAudioPlayer(END_ASSET);
+    const endAsset = tryRequireEnd();
+    if (endAsset != null) {
+      try {
+        endPlayerRef.current = createAudioPlayer(endAsset);
+        endAvailableRef.current = true;
+      } catch {
+        // Asset exists but player creation failed — haptics fallback will be used
       }
-    } catch {
-      // Asset missing or platform error — play calls will be no-ops
     }
 
     return () => {
@@ -56,29 +86,43 @@ export function useAudio(): AudioController {
       endPlayerRef.current?.remove();
       warningPlayerRef.current = null;
       endPlayerRef.current = null;
+      warningAvailableRef.current = false;
+      endAvailableRef.current = false;
     };
   }, []);
 
   function playWarning(): void {
-    const player = warningPlayerRef.current;
-    if (player == null) return;
-    try {
-      player.seekTo(0).catch(() => {});
-      player.play();
-    } catch {
-      // No-op: asset may not have loaded yet
+    if (warningAvailableRef.current) {
+      const player = warningPlayerRef.current;
+      if (player != null) {
+        try {
+          player.seekTo(0).catch(() => {});
+          player.play();
+          return;
+        } catch {
+          // Fall through to haptics
+        }
+      }
     }
+    // Haptics fallback: light notification tap when audio asset is unavailable
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning).catch(() => {});
   }
 
   function playEnd(): void {
-    const player = endPlayerRef.current;
-    if (player == null) return;
-    try {
-      player.seekTo(0).catch(() => {});
-      player.play();
-    } catch {
-      // No-op: asset may not have loaded yet
+    if (endAvailableRef.current) {
+      const player = endPlayerRef.current;
+      if (player != null) {
+        try {
+          player.seekTo(0).catch(() => {});
+          player.play();
+          return;
+        } catch {
+          // Fall through to haptics
+        }
+      }
     }
+    // Haptics fallback: success notification tap when audio asset is unavailable
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
   }
 
   return { playWarning, playEnd };
