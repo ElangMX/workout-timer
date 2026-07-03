@@ -60,7 +60,7 @@ Chain strategy: stacked-to-main
 - **Verify:** `tsc --noEmit`
 - **Status:** [x] Complete — commit `09d5f7a`
 
-### T4 — Audio: foreground players and notification scheduler
+### T4 — Audio: foreground players and notification scheduler ✅
 
 **Description:** `useAudio` — preload two `expo-audio` players (`alert-warning.mp3`, `alert-end.mp3`), expose `playWarning()`/`playEnd()`, set `playsInSilentMode: true`. `notificationScheduler` — `schedulePhase(remainingSeconds)` (warn at −5s, end at 0), `cancelAll()`, permission request helper.
 
@@ -68,8 +68,9 @@ Chain strategy: stacked-to-main
 - **Dependencies:** T1
 - **Est. lines:** ~110 (code; audio assets not counted)
 - **Verify:** `tsc --noEmit` · requires device for audio playback
+- **Status:** [x] Complete — commit `3d8abd7`
 
-### T5 — Hooks: useTimer and useRoutines
+### T5 — Hooks: useTimer and useRoutines ✅
 
 **Description:** `useTimer` — owns `setInterval`, AppState listener for background correction via wall-clock ref, dispatches TICK/CORRECT/ADVANCE, calls audio controller and notification scheduler on phase changes, cancels notifications on pause/stop, reschedules on resume. `useRoutines` — wraps `RoutineRepository` with loading state for screen consumption.
 
@@ -77,8 +78,9 @@ Chain strategy: stacked-to-main
 - **Dependencies:** T2, T3, T4
 - **Est. lines:** ~140
 - **Verify:** `tsc --noEmit`
+- **Status:** [x] Complete — commit `6414a99`
 
-### T6 — UI: screens and components
+### T6 — UI: screens and components ✅
 
 **Description:** Four screens (`HomeScreen`, `RoutineSetupScreen`, `ActiveTimerScreen`, `CompletionScreen`) and five shared components (`ExerciseForm`, `RoutineListItem`, `CountdownDisplay`, `PhaseLabel`, `TimerControls`). Empty-routine validation prevents starting timer. Deletion with confirmation.
 
@@ -86,8 +88,9 @@ Chain strategy: stacked-to-main
 - **Dependencies:** T1, T3, T5
 - **Est. lines:** ~380
 - **Verify:** `tsc --noEmit` · requires device for visual check
+- **Status:** [x] Complete — commit `26dc09e`
 
-### T7 — Integration: App wiring and config
+### T7 — Integration: App wiring and config ✅
 
 **Description:** Rewrite `App.tsx` with `NavigationContainer`, stack navigator, `TimerProvider` wrapping. Update `app.json` with `expo-audio` and `expo-notifications` plugin configs. Install deps (`@react-navigation/native`, `@react-navigation/native-stack`, `react-native-screens`, `react-native-safe-area-context`, `@react-native-async-storage/async-storage`, `expo-audio`, `expo-notifications`).
 
@@ -95,3 +98,4 @@ Chain strategy: stacked-to-main
 - **Dependencies:** T6
 - **Est. lines:** ~80
 - **Verify:** `tsc --noEmit` · `npx expo export` (build gate)
+- **Status:** [x] Complete — commit `cc44018`
