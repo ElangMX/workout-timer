@@ -41,7 +41,7 @@ export async function schedulePhase(remainingSeconds: number): Promise<void> {
         content: {
           title: 'Get Ready!',
           body: '5 seconds remaining',
-          sound: 'alert-warning.mp3',
+          sound: 'alert_warning.mp3',
         },
         trigger: {
           type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
@@ -56,7 +56,7 @@ export async function schedulePhase(remainingSeconds: number): Promise<void> {
       content: {
         title: 'Phase Complete!',
         body: 'Transitioning to next phase',
-        sound: 'alert-end.mp3',
+        sound: 'alert_end.mp3',
       },
       trigger: {
         type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,

@@ -29,8 +29,8 @@
         "expo-notifications",
         {
           "sounds": [
-            "./assets/sounds/alert-warning.mp3",
-            "./assets/sounds/alert-end.mp3"
+            "./assets/sounds/alert_warning.mp3",
+            "./assets/sounds/alert_end.mp3"
           ]
         }
       ]

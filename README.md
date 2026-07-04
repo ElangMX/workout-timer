@@ -34,8 +34,8 @@ The app needs two audio files to play alerts. Without them, it falls back to hap
 
 1. Download two short MP3 files (see sources below).
 2. Save them as:
-   - `assets/sounds/alert-warning.mp3` — short beep (~0.5s)
-   - `assets/sounds/alert-end.mp3` — distinct tone (~1–2s)
+   - `assets/sounds/alert_warning.mp3` — short beep (~0.5s)
+   - `assets/sounds/alert_end.mp3` — distinct tone (~1–2s)
 3. Restart the dev server and test on a real device.
 
 Free sound sources (CC0 / royalty-free):

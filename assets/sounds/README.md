@@ -2,8 +2,8 @@
 
 Place the following audio files in this directory before building:
 
-- `alert-warning.mp3` — short beep played 5 seconds before a phase ends
-- `alert-end.mp3` — distinct tone played when a phase transitions
+- `alert_warning.mp3` — short beep played 5 seconds before a phase ends
+- `alert_end.mp3` — distinct tone played when a phase transitions
 
 Until these files are added the app falls back to **haptic feedback** (vibration)
 via `expo-haptics` so users still receive physical alerts even without sound files.
@@ -14,8 +14,8 @@ via `expo-haptics` so users still receive physical alerts even without sound fil
 
 | File | Purpose | Haptic fallback |
 |---|---|---|
-| `alert-warning.mp3` | Warning beep at 5 s remaining | `NotificationFeedbackType.Warning` |
-| `alert-end.mp3` | Phase-end tone on transition | `NotificationFeedbackType.Success` |
+| `alert_warning.mp3` | Warning beep at 5 s remaining | `NotificationFeedbackType.Warning` |
+| `alert_end.mp3` | Phase-end tone on transition | `NotificationFeedbackType.Success` |
 
 ---
 
@@ -52,8 +52,8 @@ These sites offer CC0 / royalty-free short beeps and alert tones:
 
 1. Download both MP3 files from one of the sources above.
 2. Rename them exactly:
-   - `alert-warning.mp3`
-   - `alert-end.mp3`
+   - `alert_warning.mp3`
+   - `alert_end.mp3`
 3. Copy them into this directory (`assets/sounds/`).
 4. Verify Metro can find them:
    ```bash
@@ -70,8 +70,8 @@ These sites offer CC0 / royalty-free short beeps and alert tones:
 `sound` field of each scheduled notification:
 
 ```ts
-sound: 'alert-warning.mp3'   // warning notification
-sound: 'alert-end.mp3'       // phase-end notification
+sound: 'alert_warning.mp3'   // warning notification
+sound: 'alert_end.mp3'       // phase-end notification
 ```
 
 On **iOS** the files must also be listed in `app.json` under the

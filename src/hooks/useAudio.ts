@@ -5,8 +5,8 @@
  * the caller. Configures iOS silent-mode override on mount and disposes
  * both players on unmount.
  *
- * Audio asset files must exist at assets/sounds/alert-warning.mp3 and
- * assets/sounds/alert-end.mp3. If an asset is missing, the play calls
+ * Audio asset files must exist at assets/sounds/alert_warning.mp3 and
+ * assets/sounds/alert_end.mp3. If an asset is missing, the play calls
  * fall back to expo-haptics vibration so the user still gets physical
  * feedback even without the sound files.
  *
@@ -33,7 +33,7 @@ export interface AudioController {
 function tryRequireWarning(): number | null {
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    return require('../../assets/sounds/alert-warning.mp3') as number;
+    return require('../../assets/sounds/alert_warning.mp3') as number;
   } catch {
     return null;
   }
@@ -42,7 +42,7 @@ function tryRequireWarning(): number | null {
 function tryRequireEnd(): number | null {
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    return require('../../assets/sounds/alert-end.mp3') as number;
+    return require('../../assets/sounds/alert_end.mp3') as number;
   } catch {
     return null;
   }
